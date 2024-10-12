@@ -4,12 +4,11 @@ const connectDatabase = require('../config/db');
 
 const router = express.Router();
 
-router.route('/').get((req, res) => {
+router.route('/').get(async(req, res) => {
+    const users = await Member.find();
     res.status(200).json({
         message: 'User found',
-        user: [
-            { name: "Ronie Colemon" }
-        ]
+        users
     })
 })
 
