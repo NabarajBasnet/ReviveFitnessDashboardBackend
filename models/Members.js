@@ -13,6 +13,9 @@ const MembersSchema = mongoose.Schema({
     phoneNumber: {
         type: String
     },
+    password:{
+        type:String
+    },
     address: {
         type: String
     },

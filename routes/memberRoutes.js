@@ -16,8 +16,8 @@ router.route('/').post(async (req, res) => {
     try {
         const requestBody = await req.body;
         console.log('Request Body: ', requestBody);
-        const { firstName, lastName, email, phoneNumber, address, dob } = requestBody;
-        if (!firstName && !lastName && !email && !phoneNumber && !address && !dob) {
+        const { firstName, lastName, email, phoneNumber, password, confirmPassword, address, dob } = requestBody;
+        if (!firstName && !lastName && !email && !phoneNumber && !password && !confirmPassword && !address && !dob) {
             res.status(400)
             throw new Error('All fields required!')
         }
