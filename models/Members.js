@@ -15,6 +15,9 @@ const MembersSchema = mongoose.Schema({
     },
     address: {
         type: String
+    },
+    dob: {
+        type: Date
     }
 })
 
