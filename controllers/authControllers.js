@@ -4,6 +4,7 @@
 const connectDatabase = require("../config/db");
 const User = require("../models/Users");
 const bcryptjs = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 
 const getAllUsers = async (req, res) => {
     try {
@@ -74,4 +75,65 @@ const postUser = async (req, res) => {
     }
 };
 
-module.exports = { getAllUsers, postUser };
+
+//@POST Register new user
+//api/Users
+//access public
+
+const LogInUser = async (req, res) => {
+    try {
+        await connectDatabase();
+        const requestBody = await req.body;
+        const { email, password } = requestBody;
+
+        // Validate all fields
+        if (!email && !password) {
+            res.status(400)
+            throw new Error('All fields required!')
+        }
+
+        // Validate if user doesn't exists
+        const user = await User.findOne({ email });
+        if (!user) {
+            res.status(404)
+            throw new Error("Couldn't found user!")
+        }
+
+        // Match password
+        const matchPasswords = await bcryptjs.compare(password, user.password);
+        if (!matchPasswords) {
+            res.status(403)
+            throw new Error("Incorrect password!")
+        }
+
+        const tokenData = {
+            id: user._id,
+            email: user.email
+        }
+
+        const loginToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
+            expiresIn: '1h'
+        });
+
+        res.cookie('loginToken', loginToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'None',
+            maxAge: 60 * 60 * 1000,
+            path: '/'
+        });
+
+        res.status(200).json({
+            message: 'User logged in successfully',
+            success: true,
+            sameSite: 'None',
+            user
+        })
+
+    } catch (error) {
+        console.log('Error: ', error);
+    }
+};
+
+
+module.exports = { getAllUsers, postUser, LogInUser };
