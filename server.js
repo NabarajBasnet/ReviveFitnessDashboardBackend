@@ -15,8 +15,8 @@ const corsOptions = {
 app.use(express.json());
 connectDatabase();
 
-app.use('/api/users', cors(corsOptions), require('./routes/memberRoutes'));
-
+app.use('/api/members', cors(corsOptions), require('./routes/memberRoutes'));
+app.use('/api/users', cors(corsOptions), require('./routes/usersRoutes'));
 app.options('/api/users', cors(corsOptions));
 
 app.listen(port, () => {
