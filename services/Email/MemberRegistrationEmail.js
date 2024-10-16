@@ -3,10 +3,8 @@ const MemberQrCode = require('../QrCodes/MembersQr');
 
 const MemberRegistrationEmail = async (to, id) => {
     try {
-        // Generate the QR code for the member using their ID
         const qrCode = await MemberQrCode(id);
 
-        // Create the transporter object to send email
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             host: 'smtp.gmail.com',
@@ -18,7 +16,6 @@ const MemberRegistrationEmail = async (to, id) => {
             },
         });
 
-        // Define the HTML content with the embedded QR code as an attachment
         let mailOptions = {
             from: process.env.FROM_EMAIL,
             to: to,
@@ -39,14 +36,13 @@ const MemberRegistrationEmail = async (to, id) => {
             attachments: [
                 {
                     filename: 'qrcode.png',
-                    content: qrCode.split("base64,")[1], // Remove the base64 prefix
+                    content: qrCode.split("base64,")[1],
                     encoding: 'base64',
-                    cid: 'qrCodeImage' // Reference for the image in the HTML content
+                    cid: 'qrCodeImage'
                 }
             ]
         };
 
-        // Send the email with the QR code attachment
         let info = await transporter.sendMail(mailOptions);
         console.log("Email sent to", to);
 

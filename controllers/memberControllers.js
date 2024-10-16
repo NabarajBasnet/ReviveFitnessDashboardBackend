@@ -4,10 +4,10 @@ const MemberRegistrationEmail = require("../services/Email/MemberRegistrationEma
 
 const getAllMembers = async (req, res) => {
     await connectDatabase();
-    const users = await Member.find();
+    const members = await Member.find();
     res.status(200).json({
         message: 'User found',
-        users
+        members
     })
 };
 
@@ -16,7 +16,6 @@ const registerNewMember = async (req, res) => {
         await connectDatabase();
 
         const requestBody = await req.body;
-        console.log('Request Body: ', requestBody);
         const newMember = await new Member(requestBody);
         const savedMember = await newMember.save();
         await MemberRegistrationEmail(savedMember.email, savedMember._id,)
