@@ -57,6 +57,7 @@ const MembersSchema = mongoose.Schema({
     },
     admissionFee: {
         type: String,
+        default:1000,
     },
     finalAmmount: {
         type: String,
