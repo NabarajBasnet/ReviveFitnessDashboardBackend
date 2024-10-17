@@ -4,11 +4,22 @@ const MemberRegistrationEmail = require("../services/Email/MemberRegistrationEma
 
 const getAllMembers = async (req, res) => {
     await connectDatabase();
-    const members = await Member.find();
+    
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const members = await Member.find().skip(skip).limit(limit);
+    const totalMembers = await Member.countDocuments();
+    const totalPages = Math.ceil(totalMembers / limit);
+
     res.status(200).json({
         message: 'User found',
-        members
-    })
+        members,
+        totalMembers,
+        totalPages
+    });
+
 };
 
 const registerNewMember = async (req, res) => {
