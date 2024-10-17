@@ -23,10 +23,8 @@ const getAllMembers = async (req, res) => {
 };
 
 const getSingleMember = async (req, res) => {
-    console.log('Member ID: ', req.params.id);
     await connectDatabase();
     const memberId = req.params.id;
-    console.log('Member ID: ', memberId);
     const member = await Member.findById(memberId)
     res.status(200).json({
         message: 'Member found',
