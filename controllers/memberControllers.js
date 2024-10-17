@@ -4,7 +4,7 @@ const MemberRegistrationEmail = require("../services/Email/MemberRegistrationEma
 
 const getAllMembers = async (req, res) => {
     await connectDatabase();
-    
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
@@ -14,12 +14,24 @@ const getAllMembers = async (req, res) => {
     const totalPages = Math.ceil(totalMembers / limit);
 
     res.status(200).json({
-        message: 'User found',
+        message: 'Members found',
         members,
         totalMembers,
         totalPages
     });
 
+};
+
+const getSingleMember = async (req, res) => {
+    console.log('Member ID: ', req.params.id);
+    await connectDatabase();
+    const memberId = req.params.id;
+    console.log('Member ID: ', memberId);
+    const member = await Member.findById(memberId)
+    res.status(200).json({
+        message: 'Member found',
+        member
+    });
 };
 
 const registerNewMember = async (req, res) => {
@@ -41,4 +53,4 @@ const registerNewMember = async (req, res) => {
     }
 };
 
-module.exports = { getAllMembers, registerNewMember };
+module.exports = { getAllMembers, registerNewMember, getSingleMember };
