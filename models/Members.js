@@ -57,7 +57,7 @@ const MembersSchema = mongoose.Schema({
     },
     admissionFee: {
         type: String,
-        default:1000,
+        default: 1000,
     },
     finalAmmount: {
         type: String,
@@ -76,6 +76,11 @@ const MembersSchema = mongoose.Schema({
     },
     remark: {
         type: String,
+    },
+    status: {
+        type: String,
+        enum: ['Active', 'Inactive', "OnHold"],
+        default: 'Active',
     },
     actionTaker: {
         type: String,

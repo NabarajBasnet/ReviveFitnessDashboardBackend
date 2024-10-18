@@ -9,7 +9,7 @@ const getAllMembers = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const members = await Member.find().skip(skip).limit(limit);
+    const members = await Member.find();
     const totalMembers = await Member.countDocuments();
     const totalPages = Math.ceil(totalMembers / limit);
 
@@ -51,4 +51,39 @@ const registerNewMember = async (req, res) => {
     }
 };
 
-module.exports = { getAllMembers, registerNewMember, getSingleMember };
+const updateMemberDetails = async (req, res) => {
+    try {
+        await connectDatabase();
+        const memberId = req.params.id;
+        const requestBody = req.body;
+        console.log("Request Body: ", requestBody);
+        const updatedMember = await Member.findByIdAndUpdate(
+            memberId,
+            { $set: { ...requestBody } },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedMember) {
+            return res.status(404).json({
+                message: "Member not found",
+                success: false,
+            });
+        }
+
+        res.status(200).json({
+            message: "Member's details changed successfully",
+            success: true,
+            updatedMember,
+        });
+
+    } catch (error) {
+        console.log("Error: ", error);
+        res.status(500).json({
+            message: "Server error",
+            success: false,
+            error: error.message,
+        });
+    }
+};
+
+module.exports = { getAllMembers, registerNewMember, getSingleMember, updateMemberDetails };
