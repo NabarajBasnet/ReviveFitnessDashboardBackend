@@ -1,29 +1,36 @@
 const mongoose = require('mongoose');
 
 const MembersSchema = mongoose.Schema({
-    firstName: {
+    fullName: {
         type: String,
+        required: true,
     },
-    lastName: {
+    contactNo: {
         type: String,
+        required: true,
     },
-    address: {
-        type: String,
-    },
-    phoneNumber: {
-        type: String,
-    },
-    secondPhoneNumber: {
+    secondaryContactNo: {
         type: String,
     },
     email: {
         type: String,
+        required: true,
     },
     dob: {
         type: Date,
+        required: true,
     },
     gender: {
         type: String,
+        enum: ['Male', 'Female', 'Other'],
+    },
+    address: {
+        type: String,
+    },
+    status: {
+        type: String,
+        enum: ['Active', 'Inactive', 'OnHold'],
+        default: 'Active',
     },
     membershipOption: {
         type: String,
@@ -31,14 +38,15 @@ const MembersSchema = mongoose.Schema({
     membershipType: {
         type: String,
     },
+    membershipShift: {
+        type: String,
+    },
     membershipDate: {
         type: Date,
+        required: true,
     },
     membershipDuration: {
         type: String,
-    },
-    membershipRenewDate: {
-        type: Date,
     },
     membershipExpireDate: {
         type: Date,
@@ -47,7 +55,8 @@ const MembersSchema = mongoose.Schema({
         type: String,
     },
     discountAmmount: {
-        type: String,
+        type: Number,
+        default: 0,
     },
     discountReason: {
         type: String,
@@ -56,20 +65,23 @@ const MembersSchema = mongoose.Schema({
         type: String,
     },
     admissionFee: {
-        type: String,
+        type: Number,
         default: 1000,
     },
     finalAmmount: {
-        type: String,
+        type: Number,
+        default: 5000,
     },
     paidAmmount: {
-        type: String,
-    },
-    dueAmmount: {
-        type: String,
+        type: Number,
+        required: true,
     },
     receiptNo: {
         type: String,
+    },
+    dueAmmount: {
+        type: Number,
+        default: 0,
     },
     referenceCode: {
         type: String,
@@ -77,15 +89,12 @@ const MembersSchema = mongoose.Schema({
     remark: {
         type: String,
     },
-    status: {
-        type: String,
-        enum: ['Active', 'Inactive', "OnHold"],
-        default: 'Active',
-    },
     actionTaker: {
         type: String,
-    }
-})
+    },
+}, {
+    timestamps: true,
+});
 
 const Member = mongoose.models.members || mongoose.model('members', MembersSchema);
 module.exports = Member;
