@@ -2,18 +2,60 @@ const connectDatabase = require("../config/db");
 const Member = require("../models/Members");
 
 const validateQr = async (req, res) => {
-    const memberId = req.params.id;
+    try {
+        const memberId = req.params.id;
+        await connectDatabase();
+        const member = await Member.findById(memberId);
 
-    await connectDatabase();
+        if (!member) {
+            return res.status(404).json({
+                success: false,
+                error: 'Member not found'
+            });
+        }
 
-    const member = await Member.findById(memberId);
-    console.log('Validating Member: ', member);
+        const todaysDate = new Date().toISOString().split('T')[0];
 
-    res.status(200).json({
-        message: 'Member found',
-        member
-    });
+        const membershipDate = member.membershipDate?.toISOString().split('T')[0];
+        const membershipExpireDate = member.membershipExpireDate?.toISOString().split('T')[0];
+        const membershipOption = member.membershipOption;
+        const membershipType = member.membershipType;
 
-}
+        if (!membershipDate || !membershipExpireDate) {
+            return res.status(400).json({
+                success: false,
+                error: 'Membership details are incomplete'
+            });
+        }
 
-module.exports = {validateQr};
+        if (todaysDate > membershipExpireDate) {
+            return res.status(403).json({
+                success: false,
+                message: 'Membership has expired',
+                member,
+                membershipOption,
+                membershipType,
+                membershipDate,
+                membershipExpireDate,
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: 'Membership is valid',
+            member,
+            membershipOption,
+            membershipType,
+            membershipDate,
+            membershipExpireDate,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            error: 'Server error, please try again later'
+        });
+    }
+};
+
+module.exports = { validateQr };
