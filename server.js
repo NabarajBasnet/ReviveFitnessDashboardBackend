@@ -5,6 +5,7 @@ const dotenv = require('dotenv').config();
 const cookieParser = require('cookie-parser')
 const corn = require('node-cron')
 const TemporaryMemberAttendance = require('./models/AttendanceHistory/Members/24HourHistory');
+const updateMembershipStatus = require('./services/Memberships/ExpiredMemberships');
 
 
 const port = process.env.PORT || 5000;
@@ -40,7 +41,16 @@ corn.schedule('0 0 * * *', async () => {
     } catch (error) {
         console.log('Error: ', error);
     }
-})
+});
+
+corn.schedule('0 0 * * *', async () => {
+    try {
+        console.log('Running membership expiration check...');
+        await updateMembershipStatus();
+    } catch (error) {
+        console.log('Error: ', error);
+    }
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

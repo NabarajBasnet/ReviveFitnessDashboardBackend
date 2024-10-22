@@ -56,7 +56,6 @@ const updateMemberDetails = async (req, res) => {
         await connectDatabase();
         const memberId = req.params.id;
         const requestBody = req.body;
-        console.log("Request Body: ", requestBody);
         const updatedMember = await Member.findByIdAndUpdate(
             memberId,
             { $set: { ...requestBody } },
