@@ -26,7 +26,11 @@ app.options('/api/members', cors(corsOptions));
 app.options('/api/auth', cors(corsOptions));
 app.use('/api/validate-qr', cors(corsOptions), require('./routes/validate-qr'))
 app.options('/api/validate-qr', cors(corsOptions));
+app.use('/api/temporary-member-attendance-history', cors(corsOptions), require('./routes/TemporaryAttendanceHistory'))
+app.options('/api/temporary-member-attendance-history', cors(corsOptions));
 
+app.use('/api/permanent-member-attendance-history', cors(corsOptions), require('./routes/PermanentAttendanceHistory'))
+app.options('/api/permanent-member-attendance-history', cors(corsOptions));
 
 
 // corn job

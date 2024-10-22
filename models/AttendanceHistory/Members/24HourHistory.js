@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const getNextMidnight = () => {
     const now = new Date();
     const tomorrow = new Date(now);
@@ -7,7 +9,7 @@ const getNextMidnight = () => {
 
 const TemporaryMemberAttendanceSchema = new mongoose.Schema({
     memberId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         required: true,
         ref: 'Member'
     },
