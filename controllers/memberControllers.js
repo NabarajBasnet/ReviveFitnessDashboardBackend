@@ -10,6 +10,7 @@ const getAllMembers = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const members = await Member.find().skip(skip).limit(limit);
+    
     const totalMembers = await Member.countDocuments();
     const totalPages = Math.ceil(totalMembers / limit);
 
