@@ -45,6 +45,9 @@ const MembersSchema = mongoose.Schema({
         type: Date,
         required: true,
     },
+    membershipRenewDate: {
+        type: Date,
+    },
     membershipDuration: {
         type: String,
     },
