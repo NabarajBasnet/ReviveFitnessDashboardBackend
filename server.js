@@ -37,6 +37,8 @@ app.options('/api/permanent-member-attendance-history', cors(corsOptions));
 app.use('/api/search-all-members', cors(corsOptions), require('./routes/searchMembers'))
 app.options('/api/search-all-members', cors(corsOptions));
 
+app.use('/api/qr', cors(corsOptions), require('./routes/sendQr'));
+app.options('/api/send-qr', cors(corsOptions));
 
 // corn job
 corn.schedule('0 0 * * *', async () => {

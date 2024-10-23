@@ -95,6 +95,9 @@ const MembersSchema = mongoose.Schema({
     actionTaker: {
         type: String,
     },
+    reasonForUpdate:{
+        type:String,
+    }
 }, {
     timestamps: true,
 });

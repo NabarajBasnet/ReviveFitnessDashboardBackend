@@ -16,7 +16,7 @@ const validateQr = async (req, res) => {
             });
         }
 
-        const todaysDate = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+        const todaysDate = new Date().toISOString().split('T')[0];
         const membershipDate = member.membershipDate?.toISOString().split('T')[0];
         const membershipExpireDate = member.membershipExpireDate?.toISOString().split('T')[0];
         const membershipOption = member.membershipOption;
@@ -44,12 +44,16 @@ const validateQr = async (req, res) => {
         // Check if there is already an attendance entry for the member in the temporary history for today
         const existingTemporaryAttendance = await TemporaryMemberAttendance.findOne({
             memberId: member._id,
-            checkInDate: todaysDate,
         });
 
         if (existingTemporaryAttendance) {
-            return res.status(400).json({
+            return res.status(401).json({
                 success: false,
+                member,
+                membershipOption,
+                membershipType,
+                membershipDate,
+                membershipExpireDate,
                 message: 'Already checkedin',
             });
         }
