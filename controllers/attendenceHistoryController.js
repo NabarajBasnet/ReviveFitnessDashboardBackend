@@ -5,11 +5,19 @@ const PermanentMemberAttendance = require('../models/AttendanceHistory/Members/P
 const getTemporaryMemberAttendanceHistory = async (req, res) => {
     try {
         await ConnectDatabase();
-        const temporarymemberattendancehistory = await TemporaryMemberAttendance.find();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+
+        const temporarymemberattendancehistory = await TemporaryMemberAttendance.find().skip(skip).limit(limit);
+        const totalAttendance = await TemporaryMemberAttendance.countDocuments();
+        const totalPages = Math.ceil(totalAttendance / limit);
 
         res.status(200).json({
             message: 'Temporary Member Attendance History Found',
-            temporarymemberattendancehistory
+            temporarymemberattendancehistory,
+            totalAttendance,
+            totalPages
         });
 
     } catch (error) {

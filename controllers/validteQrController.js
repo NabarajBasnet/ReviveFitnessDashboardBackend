@@ -58,7 +58,7 @@ const validateQr = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            message: 'Membership is valid and attendance recorded',
+            message: 'Membership is valid',
             member,
             membershipOption,
             membershipType,
