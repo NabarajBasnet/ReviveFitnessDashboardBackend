@@ -1,5 +1,7 @@
 const connectDatabase = require("../config/db");
 const Member = require("../models/Members");
+const TemporaryMemberAttendance = require("../models/AttendanceHistory/Members/24HourHistory");
+const PermanentMemberAttendance = require("../models/AttendanceHistory/Members/PermanentHistory");
 
 const validateQr = async (req, res) => {
     try {
@@ -15,7 +17,6 @@ const validateQr = async (req, res) => {
         }
 
         const todaysDate = new Date().toISOString().split('T')[0];
-
         const membershipDate = member.membershipDate?.toISOString().split('T')[0];
         const membershipExpireDate = member.membershipExpireDate?.toISOString().split('T')[0];
         const membershipOption = member.membershipOption;
@@ -40,9 +41,24 @@ const validateQr = async (req, res) => {
             });
         }
 
+        // Create attendance history since the membership is valid
+        const attendanceData = {
+            memberId: member._id,
+            fullName: member.fullName,
+            membershipOption,
+        };
+
+        // Create temporary attendance history
+        const newTemporaryAttendance = new TemporaryMemberAttendance(attendanceData);
+        await newTemporaryAttendance.save();
+
+        // Create permanent attendance history
+        const newPermanentAttendance = new PermanentMemberAttendance(attendanceData);
+        await newPermanentAttendance.save();
+
         return res.status(200).json({
             success: true,
-            message: 'Membership is valid',
+            message: 'Membership is valid and attendance recorded',
             member,
             membershipOption,
             membershipType,
