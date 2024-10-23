@@ -21,6 +21,9 @@ const corsOptions = {
 app.use(express.json());
 app.use(cookieParser());
 
+app.use('/api/users', cors(corsOptions), require('./routes/users'));
+app.options('/api/users', cors(corsOptions));
+
 app.use('/api/members', cors(corsOptions), require('./routes/memberRoutes'));
 app.use('/api/auth', cors(corsOptions), require('./routes/auth'));
 app.options('/api/members', cors(corsOptions));
