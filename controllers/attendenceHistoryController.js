@@ -9,7 +9,12 @@ const getTemporaryMemberAttendanceHistory = async (req, res) => {
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
 
-        const temporarymemberattendancehistory = await TemporaryMemberAttendance.find().skip(skip).limit(limit);
+        const temporarymemberattendancehistory = await TemporaryMemberAttendance
+            .find()
+            .sort({ checkInTime: -1 })
+            .skip(skip)
+            .limit(limit);
+
         const totalAttendance = await TemporaryMemberAttendance.countDocuments();
         const totalPages = Math.ceil(totalAttendance / limit);
 
@@ -24,6 +29,7 @@ const getTemporaryMemberAttendanceHistory = async (req, res) => {
         console.log('Error: ', error);
     }
 };
+
 
 const getPermanentMemberAttendanceHistory = async (req, res) => {
     try {
