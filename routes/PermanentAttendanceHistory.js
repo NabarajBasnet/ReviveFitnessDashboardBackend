@@ -6,6 +6,6 @@ const {
 
 router.route('/').get(getPermanentMemberAttendanceHistory);
 
-router.route('/').post(postPermanentMemberAttendanceHistory);
+router.route('/create').post(postPermanentMemberAttendanceHistory);
 
 module.exports = router;

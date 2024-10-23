@@ -35,6 +35,7 @@ const postTemporaryMemberAttendanceHistory = async (req, res) => {
         await ConnectDatabase();
 
         const requestBody = await req.body;
+        console.log('Request Body: ', requestBody);
         const newTemporaryMemberAttendance = await new TemporaryMemberAttendance(requestBody);
         const savedTemporaryMemberAttendance = await newTemporaryMemberAttendance.save();
 

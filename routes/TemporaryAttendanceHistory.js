@@ -7,6 +7,6 @@ const {
 
 router.route('/').get(getTemporaryMemberAttendanceHistory);
 
-router.route('/').post(postTemporaryMemberAttendanceHistory);
+router.route('/create').post(postTemporaryMemberAttendanceHistory);
 
 module.exports = router;

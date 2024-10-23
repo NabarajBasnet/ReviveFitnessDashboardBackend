@@ -11,6 +11,7 @@ const searchMembers = async (req, res) => {
                 { fullName: { $regex: memberSearchQuery, $options: 'i' } },
                 { email: { $regex: memberSearchQuery, $options: 'i' } },
                 { contactNo: { $regex: memberSearchQuery, $options: 'i' } },
+                { membershipShift: { $regex: memberSearchQuery, $options: 'i' } },
             ]
         })
         res.status(200).json({
