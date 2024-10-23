@@ -10,7 +10,7 @@ const getAllMembers = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const members = await Member.find().skip(skip).limit(limit);
-    
+
     const totalMembers = await Member.countDocuments();
     const totalPages = Math.ceil(totalMembers / limit);
 
@@ -40,7 +40,7 @@ const registerNewMember = async (req, res) => {
         const requestBody = await req.body;
         const newMember = await new Member(requestBody);
         const savedMember = await newMember.save();
-        await MemberRegistrationEmail(savedMember.email, savedMember._id,)
+        await MemberRegistrationEmail(savedMember.email, savedMember._id, savedMember.fullName, savedMember.membershipOption, savedMember.membershipType, savedMember.membershipDuration, savedMember.membershipDate, savedMember.membershipRenewDate, savedMember.membershipExpireDate, savedMember.contactNo, savedMember.dob, savedMember.address, savedMember.finalAmmount, savedMember.paidAmmount, savedMember.dueAmmount)
         res.status(200).json({
             message: "New member registered successfully",
             success: true,
