@@ -97,6 +97,17 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     try {
         await ConnectDatabase();
+        const userId = req.params.id;
+        const user = await User.findByIdAndDelete(userId);
+        if (!user) {
+            res.status(400).json({
+                message: 'Unable to delete user'
+            })
+        }
+
+        res.status(200).json({
+            message: 'User deleted successfully'
+        });
 
     } catch (error) {
         console.log('Error: ', error);

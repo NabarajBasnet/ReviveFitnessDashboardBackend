@@ -88,21 +88,30 @@ const LogInUser = async (req, res) => {
 
         // Validate all fields
         if (!email && !password) {
-            res.status(400)
+            res.status(400).json({
+                message:'All fields required!',
+                success:false
+            })
             throw new Error('All fields required!')
         }
 
         // Validate if user doesn't exists
         const user = await User.findOne({ email });
         if (!user) {
-            res.status(404)
+            res.status(404).json({
+                message:"Couldn't found user!",
+                success:false
+            })
             throw new Error("Couldn't found user!")
         }
 
         // Match password
         const matchPasswords = await bcryptjs.compare(password, user.password);
         if (!matchPasswords) {
-            res.status(403)
+            res.status(403).json({
+                message:'Incorrect password!',
+                success:false
+            })
             throw new Error("Incorrect password!")
         }
 
