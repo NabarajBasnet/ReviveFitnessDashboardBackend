@@ -16,9 +16,9 @@ const getAllUsers = async (req, res) => {
 
 const getSingleUser = async (req, res) => {
     try {
-        const memberId = req.params.id;
+        const userId = req.params.id;
         await ConnectDatabase();
-        const user = await User.findById(memberId);
+        const user = await User.findById(userId);
 
         if (!user) {
             res.status(400).json({
@@ -49,9 +49,31 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         await ConnectDatabase();
+        const userId = req.params.id;
+        const requestBody = req.body;
 
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: requestBody },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({
+                message: 'User not found'
+            });
+        }
+
+        res.status(200).json({
+            message: 'User updated successfully',
+            user: updatedUser
+        });
     } catch (error) {
         console.log('Error: ', error);
+        res.status(500).json({
+            message: 'Error updating user',
+            error: error.message
+        });
     }
 };
 
