@@ -4,14 +4,24 @@ const User = require('../models/Users');
 const getAllUsers = async (req, res) => {
     try {
         await ConnectDatabase();
-        const users = await User.find();
+
+        const page = parseInt(req.params.page) || 1;
+        const limit = parseInt(req.params.limit) || 6;
+        const skip = (page - 1) * limit;
+        const users = await User.find().skip(skip).limit(limit);
+        const totalUsers = await User.countDocuments();
+        const totalPages = Math.ceil(totalUsers / limit);
+
         res.status(200).json({
             message: 'Users found',
             users,
-        })
+            totalUsers,
+            totalPages
+        });
+
     } catch (error) {
         console.log('Error: ', error);
-    }
+    };
 };
 
 const getSingleUser = async (req, res) => {
@@ -19,6 +29,7 @@ const getSingleUser = async (req, res) => {
         const userId = req.params.id;
         await ConnectDatabase();
         const user = await User.findById(userId);
+        console.log('User id: ', userId);
 
         if (!user) {
             res.status(400).json({
@@ -33,7 +44,7 @@ const getSingleUser = async (req, res) => {
             user,
         })
     } catch (error) {
-        console.log('Error: ', error);
+        console.log('Error in get: ', error);
     }
 };
 
@@ -52,24 +63,30 @@ const updateUser = async (req, res) => {
         const userId = req.params.id;
         const requestBody = req.body;
 
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const { firstName, lastName, email, phoneNumber, address, dob, role } = requestBody;
+
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            { $set: requestBody },
+            requestBody,
             { new: true, runValidators: true }
         );
 
         if (!updatedUser) {
-            return res.status(404).json({
-                message: 'User not found'
-            });
+            return res.status(404).json({ message: 'Failed to update user' });
         }
 
+        console.log('Updated user: ', updatedUser);
         res.status(200).json({
             message: 'User updated successfully',
             user: updatedUser
         });
     } catch (error) {
-        console.log('Error: ', error);
+        console.log('Error updating user: ', error);
         res.status(500).json({
             message: 'Error updating user',
             error: error.message
