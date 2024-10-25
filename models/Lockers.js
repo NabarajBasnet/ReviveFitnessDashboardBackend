@@ -13,7 +13,7 @@ const LockersSchema = mongoose.Schema({
     duration: {
         type: String
     },
-    lockerExpireDate: {
+    expireDate: {
         type: Date
     },
     fee: {
@@ -23,7 +23,7 @@ const LockersSchema = mongoose.Schema({
         enum: ['Fonepay', 'Cash', 'Card'],
         default: 'Cash'
     },
-    referenceId: {
+    referenceCode: {
         type: String,
     },
     receiptNo: {

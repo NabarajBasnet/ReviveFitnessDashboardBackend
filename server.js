@@ -43,6 +43,9 @@ app.options('/api/search-all-members', cors(corsOptions));
 app.use('/api/qr', cors(corsOptions), require('./routes/sendQr'));
 app.options('/api/send-qr', cors(corsOptions));
 
+app.use('/api/lockers', cors(corsOptions), require('./routes/lockerSystem'));
+app.options('/api/lockers', cors(corsOptions));
+
 // corn job
 corn.schedule('0 0 * * *', async () => {
     try {
