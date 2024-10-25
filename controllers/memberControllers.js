@@ -13,15 +13,41 @@ const getAllMembers = async (req, res) => {
 
     const totalMembers = await Member.countDocuments();
     const totalPages = Math.ceil(totalMembers / limit);
+    const totalActiveMembers = await Member.countDocuments({ status: 'Active' });
+    const totalInactiveMembers = await Member.countDocuments({ status: 'Inactive' });
+
+    const currentDate = new Date();
+    let totalActiveMembersPastWeek = 0;
+
+    for (let i = 0; i < 7; i++) {
+        const startOfDay = new Date(currentDate);
+        startOfDay.setDate(currentDate.getDate() - i);
+        startOfDay.setHours(0, 0, 0, 0);
+
+        const endOfDay = new Date(startOfDay);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        const activeMembersOnDay = await Member.countDocuments({
+            status: 'Active',
+            createdAt: { $gte: startOfDay, $lt: endOfDay }
+        });
+
+        totalActiveMembersPastWeek += activeMembersOnDay;
+    }
+
+    const dailyAverageActiveMembers = totalActiveMembersPastWeek / 7;
 
     res.status(200).json({
         message: 'Members found',
         members,
         totalMembers,
-        totalPages
+        totalPages,
+        totalActiveMembers,
+        totalInactiveMembers,
+        dailyAverageActiveMembers
     });
-
 };
+
 
 const getSingleMember = async (req, res) => {
     await connectDatabase();
