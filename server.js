@@ -18,6 +18,8 @@ const corsOptions = {
     credentials: true,
 };
 
+
+app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
@@ -64,3 +66,9 @@ corn.schedule('0 0 * * *', async () => {
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
+
+module.exports = (req, res) => {
+    connectDatabase();
+    app(req, res);
+};
+
