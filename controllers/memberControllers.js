@@ -15,7 +15,7 @@ const getAllMembers = async (req, res) => {
     const totalPages = Math.ceil(totalMembers / limit);
 
     res.status(200).json({
-        message: 'Members found Haha Whats up you dude',
+        message: 'Members found',
         members,
         totalMembers,
         totalPages
