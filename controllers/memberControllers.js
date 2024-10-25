@@ -35,7 +35,7 @@ const getAllMembers = async (req, res) => {
         totalActiveMembersPastWeek += activeMembersOnDay;
     }
 
-    const dailyAverageActiveMembers = totalActiveMembersPastWeek / 7;
+    const dailyAverageActiveMembers = (totalActiveMembersPastWeek / 7).toFixed(2);
 
     res.status(200).json({
         message: 'Members found',
@@ -44,10 +44,9 @@ const getAllMembers = async (req, res) => {
         totalPages,
         totalActiveMembers,
         totalInactiveMembers,
-        dailyAverageActiveMembers
+        dailyAverageActiveMembers: parseFloat(dailyAverageActiveMembers) // Convert back to number
     });
 };
-
 
 const getSingleMember = async (req, res) => {
     await connectDatabase();
