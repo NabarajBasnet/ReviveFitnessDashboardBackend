@@ -37,15 +37,6 @@ const getAllMembers = async (req, res) => {
 
     const dailyAverageActiveMembers = Math.round((totalActiveMembersPastWeek / 7) * 100) / 100;
 
-    const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay() + 1);
-    startOfWeek.setHours(0, 0, 0, 0);
-
-    const renewedFromLastWeek = await Member.countDocuments({
-        reasonForUpdate: "Renew",
-        updatedAt: { $gte: startOfWeek }
-    });
-
     res.status(200).json({
         message: 'Members found',
         members,
@@ -53,11 +44,9 @@ const getAllMembers = async (req, res) => {
         totalPages,
         totalActiveMembers,
         totalInactiveMembers,
-        dailyAverageActiveMembers,
-        renewedFromLastWeek
+        dailyAverageActiveMembers
     });
 };
-
 
 
 const getSingleMember = async (req, res) => {
