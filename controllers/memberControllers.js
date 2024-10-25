@@ -19,6 +19,17 @@ const getAllMembers = async (req, res) => {
     const currentDate = new Date();
     let totalActiveMembersPastWeek = 0;
 
+    const startOfWeek = new Date(currentDate);
+    const dayOfWeek = startOfWeek.getDay();
+    const daysToSubtract = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    startOfWeek.setDate(currentDate.getDate() - daysToSubtract);
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const membersRenewedThisWeek = await Member.find({
+        reasonForUpdate: 'Renew',
+        updatedAt: { $gte: startOfWeek, $lte: currentDate }
+    });
+
     for (let i = 0; i < 7; i++) {
         const startOfDay = new Date(currentDate);
         startOfDay.setDate(currentDate.getDate() - i);
@@ -44,7 +55,8 @@ const getAllMembers = async (req, res) => {
         totalPages,
         totalActiveMembers,
         totalInactiveMembers,
-        dailyAverageActiveMembers
+        dailyAverageActiveMembers,
+        membersRenewedThisWeek
     });
 };
 
