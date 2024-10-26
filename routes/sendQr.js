@@ -3,6 +3,6 @@ const sendQr = require('../controllers/sendQrController');
 
 const router = express.Router();
 
-router.route('/send-qr').post(sendQr);
+router.route('/').post(sendQr);
 
 module.exports = router
