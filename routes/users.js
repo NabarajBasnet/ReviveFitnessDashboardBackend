@@ -1,7 +1,11 @@
 const express = require('express');
+const auth = require('../middlewares/auth');
+
 const { getAllUsers, createUser, updateUser, deleteUser, getSingleUser } = require('../controllers/userController');
 
 const router = express.Router();
+
+// router.use(auth);
 
 router.route('/').get(getAllUsers);
 

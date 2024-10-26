@@ -6,7 +6,8 @@ const cookieParser = require('cookie-parser')
 const corn = require('node-cron')
 const TemporaryMemberAttendance = require('./models/AttendanceHistory/Members/24HourHistory');
 const updateMembershipStatus = require('./services/Memberships/ExpiredMemberships');
-
+const roleAuthorization = require('./middlewares/role')
+const auth = require('./middlewares/auth')
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -20,6 +21,7 @@ const corsOptions = {
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors(corsOptions));
 
 app.use('/api/users', cors(corsOptions), require('./routes/users'));
 app.options('/api/users', cors(corsOptions));

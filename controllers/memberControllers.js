@@ -75,10 +75,22 @@ const registerNewMember = async (req, res) => {
     try {
         await connectDatabase();
 
-        const requestBody = await req.body;
-        const newMember = await new Member(requestBody);
+        const requestBody = req.body;
+        const { email } = requestBody;
+
+        const existingMembers = await Member.find({ email: email });
+        if (existingMembers.length > 0) {
+            return res.status(401).json({
+                message: "Member is already registered with this email",
+                success: false
+            });
+        }
+
+        const newMember = new Member(requestBody);
         const savedMember = await newMember.save();
-        await MemberRegistrationEmail(savedMember.email, savedMember._id, savedMember.fullName, savedMember.membershipOption, savedMember.membershipType, savedMember.membershipDuration, savedMember.membershipDate, savedMember.membershipRenewDate, savedMember.membershipExpireDate, savedMember.contactNo, savedMember.dob, savedMember.address, savedMember.finalAmmount, savedMember.paidAmmount, savedMember.dueAmmount)
+
+        await MemberRegistrationEmail(savedMember.email, savedMember._id, savedMember.fullName, savedMember.membershipOption, savedMember.membershipType, savedMember.membershipDuration, savedMember.membershipDate, savedMember.membershipRenewDate, savedMember.membershipExpireDate, savedMember.contactNo, savedMember.dob, savedMember.address, savedMember.finalAmmount, savedMember.paidAmmount, savedMember.dueAmmount);
+
         res.status(200).json({
             message: "New member registered successfully",
             success: true,
@@ -87,6 +99,11 @@ const registerNewMember = async (req, res) => {
 
     } catch (error) {
         console.log("Error: ", error);
+        res.status(500).json({
+            message: "An error occurred while registering the member",
+            success: false,
+            error: error.message
+        });
     }
 };
 

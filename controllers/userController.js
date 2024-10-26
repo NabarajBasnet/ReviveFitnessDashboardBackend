@@ -1,7 +1,9 @@
 const ConnectDatabase = require('../config/db');
 const User = require('../models/Users');
+const jwt = require('jsonwebtoken')
 
 const getAllUsers = async (req, res) => {
+
     try {
         await ConnectDatabase();
 
@@ -25,6 +27,9 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
+    const token = req.cookies.loginToken
+    const user = jwt.verify(token, process.env.TOKEN_SECRET);
+
     try {
         const userId = req.params.id;
         await ConnectDatabase();

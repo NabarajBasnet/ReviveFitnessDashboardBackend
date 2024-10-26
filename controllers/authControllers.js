@@ -89,8 +89,8 @@ const LogInUser = async (req, res) => {
         // Validate all fields
         if (!email && !password) {
             res.status(400).json({
-                message:'All fields required!',
-                success:false
+                message: 'All fields required!',
+                success: false
             })
             throw new Error('All fields required!')
         }
@@ -99,8 +99,8 @@ const LogInUser = async (req, res) => {
         const user = await User.findOne({ email });
         if (!user) {
             res.status(404).json({
-                message:"Couldn't found user!",
-                success:false
+                message: "Couldn't found user!",
+                success: false
             })
             throw new Error("Couldn't found user!")
         }
@@ -109,24 +109,26 @@ const LogInUser = async (req, res) => {
         const matchPasswords = await bcryptjs.compare(password, user.password);
         if (!matchPasswords) {
             res.status(403).json({
-                message:'Incorrect password!',
-                success:false
+                message: 'Incorrect password!',
+                success: false
             })
             throw new Error("Incorrect password!")
         }
 
         const tokenData = {
             id: user._id,
-            email: user.email
+            role: user.role
         }
 
         const loginToken = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
             expiresIn: '1h'
         });
 
+
         res.cookie('loginToken', loginToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
+            secure: false,
             sameSite: 'None',
             maxAge: 60 * 60 * 1000,
             path: '/'
