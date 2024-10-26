@@ -29,6 +29,10 @@ const LockersSchema = mongoose.Schema({
     receiptNo: {
         type: String,
     },
+    isAssigned:{
+        type:Boolean,
+        default:false
+    }
 })
 
 const Locker = mongoose.models.lockers || mongoose.model('lockers', LockersSchema);
