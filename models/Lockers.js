@@ -1,8 +1,11 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const LockersSchema = mongoose.Schema({
     lockerNumber: {
         type: Number
+    },
+    memberId: {
+        type: String
     },
     memberName: {
         type: String
@@ -20,20 +23,25 @@ const LockersSchema = mongoose.Schema({
         type: String
     },
     paymentMethod: {
+        type: String,
         enum: ['Fonepay', 'Cash', 'Card'],
         default: 'Cash'
     },
     referenceCode: {
-        type: String,
+        type: String
     },
     receiptNo: {
-        type: String,
+        type: String
     },
-    isAssigned:{
-        type:Boolean,
-        default:false
-    }
-})
+    isAssigned: {
+        type: Boolean,
+        default: false
+    },
+    status: {
+        type: String,
+        enum: ['Expired', 'Booked', 'Empty']
+    },
+});
 
 const Locker = mongoose.models.lockers || mongoose.model('lockers', LockersSchema);
 module.exports = Locker;

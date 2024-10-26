@@ -6,8 +6,8 @@ router.route('/').get(getAllLockers)
 
 router.route('/:id').get(getLockerInformation);
 
-router.route('/create').post(registerMemberLocker);
+router.route('/').post(registerMemberLocker);
 
-router.route('/patch').patch(updateMemberLocker);
+router.route('/patch').put(updateMemberLocker);
 
 module.exports = router;
