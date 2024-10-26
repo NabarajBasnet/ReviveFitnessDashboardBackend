@@ -48,7 +48,6 @@ const getLockerInformation = async (req, res) => {
     try {
         await ConnectDatabase();
         const lockerId = req.params.id;
-        console.log("ID: ", lockerId);
         const lockerDetails = await Locker.findById(lockerId);
         if (!lockerDetails) {
             res.status(400).json({
@@ -69,14 +68,6 @@ const getLockerInformation = async (req, res) => {
 }
 
 const registerMemberLocker = async (req, res) => {
-    try {
-
-    } catch (error) {
-        console.log('Error: ', error);
-    }
-}
-
-const updateMemberLocker = async (req, res) => {
     try {
         await ConnectDatabase();
 
@@ -128,5 +119,43 @@ const updateMemberLocker = async (req, res) => {
     }
 };
 
+const resetLocker = async (req, res) => {
+    try {
+        await ConnectDatabase();
 
-module.exports = { getAllLockers, getLockerInformation, registerMemberLocker, updateMemberLocker };
+        const lockerId = await req.params.id;
+        const locker = await Locker.findById(lockerId);
+
+        if (!locker) {
+            res.status(400).json({
+                message: "Locker not found",
+                success: false
+            })
+        }
+
+        locker.memberId = undefined;
+        locker.memberName = undefined;
+        locker.renewDate = undefined;
+        locker.duration = undefined;
+        locker.expireDate = undefined;
+        locker.fee = undefined;
+        locker.paymentMethod = undefined;
+        locker.referenceCode = undefined;
+        locker.receiptNo = undefined;
+        locker.isAssigned = false;
+        locker.status = 'Empty';
+
+        await locker.save();
+
+        res.status(200).json({
+            message: "Locker is empty now",
+            success: true,
+        });
+
+    } catch (error) {
+        console.error('Error: ', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
+
+module.exports = { getAllLockers, getLockerInformation, registerMemberLocker, resetLocker };
