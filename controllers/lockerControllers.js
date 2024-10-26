@@ -41,7 +41,7 @@ const getAllLockers = async (req, res) => {
             success: false,
             error
         });
-    }
+    };
 };
 
 const getLockerInformation = async (req, res) => {
@@ -64,13 +64,12 @@ const getLockerInformation = async (req, res) => {
 
     } catch (error) {
         console.log('Error: ', error);
-    }
+    };
 }
 
 const registerMemberLocker = async (req, res) => {
     try {
         await ConnectDatabase();
-
         const requestBody = req.body;
 
         const {
@@ -91,13 +90,14 @@ const registerMemberLocker = async (req, res) => {
 
         if (!locker) {
             res.status(404).json({ success: false, message: 'Locker not found' });
-        }
+        };
 
         if (locker.isAssigned) {
             res.status(400).json({ success: false, message: 'Locker is already assigned' });
-        }
+        };
 
         locker.isAssigned = true;
+        locker.status = 'Booked';
         locker.lockerNumber = lockerNumber;
         locker.memberId = memberId;
         locker.memberName = memberName;
@@ -116,7 +116,7 @@ const registerMemberLocker = async (req, res) => {
     } catch (error) {
         console.error('Error: ', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+    };
 };
 
 const resetLocker = async (req, res) => {
@@ -131,7 +131,7 @@ const resetLocker = async (req, res) => {
                 message: "Locker not found",
                 success: false
             })
-        }
+        };
 
         locker.memberId = undefined;
         locker.memberName = undefined;
@@ -155,7 +155,7 @@ const resetLocker = async (req, res) => {
     } catch (error) {
         console.error('Error: ', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+    };
 }
 
 module.exports = { getAllLockers, getLockerInformation, registerMemberLocker, resetLocker };
